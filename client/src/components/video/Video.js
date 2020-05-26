@@ -1,20 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
 import "./video.scss";
 
 var player;
 const Video = (props) => {
-  const notify = () => {
-    toast(
-      <div>
-        <FontAwesomeIcon icon={faUserFriends} />
-        &nbsp; A friend joined!
-      </div>
-    );
-  };
-
   const [videoID, setVideoID] = useState(props.videoID);
 
   const loadVideo = () => {
@@ -40,7 +28,6 @@ const Video = (props) => {
       let data = JSON.parse(event.data);
       if (data.event === "sync") updateVideo(data);
       if (data.event === "join") join(data);
-      if (data.event === "users" && props.leader) notify();
     });
     if (videoID !== null) {
       if (!window.YT) {

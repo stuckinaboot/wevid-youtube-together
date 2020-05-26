@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -6,12 +7,20 @@ dotenv.config({ path: "./config/config.env" });
 //Body parser
 app.use(express.json());
 app.use(cors());
+console.log(__dirname);
+
+const BUILD_PATH = path.join(__dirname, "../client", "build");
+const INDEX_HTML_PATH = path.join(BUILD_PATH, "index.html");
+
+app.use(express.static(path.join(__dirname, "../client", "build")));
+
 const PORT = process.env.PORT || 5000;
 
 const server = require("http").createServer();
 const WebSocket = require("ws").Server;
 const wss = new WebSocket({ server: server });
 
+app.get("/*", (_, res) => res.sendFile(INDEX_HTML_PATH));
 server.on("request", app);
 
 server.listen(PORT, () => {

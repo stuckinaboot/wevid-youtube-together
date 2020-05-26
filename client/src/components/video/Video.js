@@ -9,7 +9,7 @@ const Video = (props) => {
     player = new window.YT.Player("player", {
       videoId: videoID,
       playerVars: {
-        mute: 1,
+        mute: props.leader ? 0 : 1,
         autoplay: 0,
       },
       events: {

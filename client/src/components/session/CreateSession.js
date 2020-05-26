@@ -1,22 +1,16 @@
-import React, { useState } from "react";
-import { uuid } from "uuidv4";
-import { useHistory } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-
-import { toast } from "react-toastify";
+import React from "react";
+import { useHistory, useParams } from "react-router-dom";
 
 const CreateSession = (props) => {
   const history = useHistory();
-  const [url, setUrl] = useState("");
-  const notify = () => toast(<div>&nbsp; Invalid Link!</div>);
 
-  const sessionID = uuid().slice(0, 6);
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    var videoID = youtubeParser(url);
+  const { sessionID, videoUrl } = useParams();
+
+  const handleSubmit = () => {
+    const decodedVideoUrl = decodeURIComponent(videoUrl);
+    console.log(sessionID, decodedVideoUrl);
+    var videoID = youtubeParser(decodedVideoUrl); //url);
     if (!videoID) {
-      notify();
       return;
     }
     props.session(videoID, sessionID, true);
@@ -29,24 +23,7 @@ const CreateSession = (props) => {
     return match && match[7].length === 11 ? match[7] : false;
   };
 
-  return (
-    <>
-      <div className="input-container">
-        <form className="input-form" onSubmit={handleSubmit}>
-          <input
-            placeholder="Paste a YouTube link "
-            className="input-field"
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-          />
-          <button className="input-button" type="Submit">
-            <FontAwesomeIcon icon={faPlay} />
-          </button>
-        </form>
-      </div>
-    </>
-  );
+  return <div>{handleSubmit()}</div>;
 };
 
 export default CreateSession;

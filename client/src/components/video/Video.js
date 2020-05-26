@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
@@ -100,10 +100,9 @@ const Video = (props) => {
       <div className="videoWrap">
         <div className="video">
           <div id="player">
-            <h3>No video found</h3>
+            <h3>Loading...</h3>
           </div>
         </div>
-        {/* {props.leader && <Views socket={props.socket} />} */}
       </div>
     </>
   );

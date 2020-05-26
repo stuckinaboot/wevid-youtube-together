@@ -23,8 +23,7 @@ function App() {
         <main className="content">
           <Switch>
             <Route
-              exact
-              path="/"
+              path="/start/:sessionID/:videoUrl"
               render={() => <CreateSession session={createSession} />}
             />
             <Route

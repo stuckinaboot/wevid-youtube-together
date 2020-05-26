@@ -4,6 +4,11 @@ import "./video.scss";
 var player;
 const Video = (props) => {
   const [videoID, setVideoID] = useState(props.videoID);
+  const [initialVideoState, setInitialVideoState] = useState({
+    currentTime: 0,
+    shouldPause: false,
+    timestamp: 0,
+  });
 
   const loadVideo = () => {
     player = new window.YT.Player("player", {
@@ -27,7 +32,21 @@ const Video = (props) => {
     props.socket.addEventListener("message", (event) => {
       let data = JSON.parse(event.data);
       if (data.event === "sync") updateVideo(data);
-      if (data.event === "join") join(data);
+      if (data.event === "join") {
+        join(data);
+
+        // On join, ensure that we go to the correct time
+        // in the video
+        // TODO this logic may be wrong
+        console.log("HIT THIS ShIT", data);
+        if (data.latestEvent != null) {
+          setInitialVideoState({
+            currentTime: data.latestEvent.currentTime,
+            shouldPause: data.latestEvent.action === "pause",
+            timestamp: data.latestEvent.timestamp,
+          });
+        }
+      }
     });
     if (videoID !== null) {
       if (!window.YT) {
@@ -53,7 +72,24 @@ const Video = (props) => {
     } else if (data.action === "pause" && videoStatus !== 2) pauseVideo();
   };
 
-  const onPlayerReady = (event) => event.target.playVideo();
+  const onPlayerReady = (event) => {
+    event.target.playVideo();
+    if (initialVideoState.timestamp === 0) {
+      // Implies we are first user to join
+      return;
+    }
+    // The time we want to be at is the time in video
+    // when currentTime occurred plus the duration after currentTime,
+    // in seconds
+    const updatedCurrentTime =
+      initialVideoState.currentTime +
+      (Date.now() - initialVideoState.timestamp) / 1000;
+
+    event.target.seekTo(updatedCurrentTime, true);
+    if (initialVideoState.shouldPause) {
+      event.target.pauseVideo();
+    }
+  };
 
   const onStateChange = (event) => changeState(event.data);
   const sync = () => props.socket.send(currentStatus());
@@ -66,6 +102,8 @@ const Video = (props) => {
       JSON.stringify({
         event: "sync",
         action: "pause",
+        currentTime: player.getCurrentTime(),
+        timestamp: Date.now(),
       })
     );
   };
@@ -75,6 +113,7 @@ const Video = (props) => {
       action: "currenttime",
       videoID: videoID,
       currentTime: player.getCurrentTime(),
+      timestamp: Date.now(),
     });
 
   const changeState = (triggered) => {

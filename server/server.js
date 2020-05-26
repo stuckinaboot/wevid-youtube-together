@@ -62,7 +62,15 @@ const sessionById = (id) => {
 const handleSyncEvent = (data, ws) => {
   sessions.forEach((session) => {
     session.users.forEach((user) => {
-      if (user.ws == ws) brodcastMessage(data, session.users, ws);
+      // TODO this whole double loop is inefficient
+      if (user.ws == ws) {
+        brodcastMessage(data, session.users, ws);
+        session.latestEvent = {
+          action: data.action,
+          timestamp: data.timestamp,
+          currentTime: data.currentTime,
+        };
+      }
     });
   });
 };
@@ -78,6 +86,7 @@ const joinSession = (data, ws) => {
         event: "join",
         videoID: session.videoID,
         users: totalusers,
+        latestEvent: session.latestEvent,
       })
     );
     brodcastMessage(
@@ -102,5 +111,6 @@ const createSession = (data, ws) => {
     sessionID: data.sessionID,
     users: [{ ws: ws }],
     videoID: data.videoID,
+    latestEvent: null,
   });
 };

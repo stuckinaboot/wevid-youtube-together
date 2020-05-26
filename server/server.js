@@ -1,18 +1,18 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const cors = require('cors');
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
 const app = express();
-dotenv.config({ path: './config/config.env' });
+dotenv.config({ path: "./config/config.env" });
 //Body parser
 app.use(express.json());
 app.use(cors());
 const PORT = process.env.PORT || 5000;
 
-const server = require('http').createServer();
-const WebSocket = require('ws').Server;
+const server = require("http").createServer();
+const WebSocket = require("ws").Server;
 const wss = new WebSocket({ server: server });
 
-server.on('request', app);
+server.on("request", app);
 
 server.listen(PORT, () => {
   console.log(`Listening on ${PORT}!`);
@@ -20,8 +20,8 @@ server.listen(PORT, () => {
 
 let sessions = [];
 
-wss.on('connection', (ws) => {
-  ws.on('message', (message) => {
+wss.on("connection", (ws) => {
+  ws.on("message", (message) => {
     console.log(JSON.parse(message));
     handleMessage(JSON.parse(message), ws);
   });
@@ -35,8 +35,8 @@ const brodcastMessage = (data, users, ws) => {
 
 const handleMessage = (data, ws) => {
   let event = data.event;
-  if (event === 'session') handleSessionEvent(data, ws);
-  else if (event === 'sync') handleSyncEvent(data, ws);
+  if (event === "session") handleSessionEvent(data, ws);
+  else if (event === "sync") handleSyncEvent(data, ws);
 };
 
 const sessionById = (id) => {
@@ -67,14 +67,14 @@ const joinSession = (data, ws) => {
     var totalusers = session.users.length;
     ws.send(
       JSON.stringify({
-        event: 'join',
+        event: "join",
         videoID: session.videoID,
         users: totalusers,
       })
     );
     brodcastMessage(
       {
-        event: 'users',
+        event: "users",
         users: totalusers,
       },
       session.users,
@@ -85,8 +85,8 @@ const joinSession = (data, ws) => {
 
 const handleSessionEvent = (data, ws) => {
   let action = data.action;
-  if (action === 'create') createSession(data, ws);
-  else if (action === 'join') joinSession(data, ws);
+  if (action === "create") createSession(data, ws);
+  else if (action === "join") joinSession(data, ws);
 };
 
 const createSession = (data, ws) => {

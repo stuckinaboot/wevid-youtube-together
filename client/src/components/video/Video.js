@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserFriends } from '@fortawesome/free-solid-svg-icons';
-import './video.scss';
-import Views from './views';
+import React, { useRef, useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserFriends } from "@fortawesome/free-solid-svg-icons";
+import "./video.scss";
+
 var player;
 const Video = (props) => {
   const notify = () => {
@@ -18,7 +18,7 @@ const Video = (props) => {
   const [videoID, setVideoID] = useState(props.videoID);
 
   const loadVideo = () => {
-    player = new window.YT.Player('player', {
+    player = new window.YT.Player("player", {
       videoId: videoID,
       playerVars: {
         mute: 1,
@@ -36,20 +36,20 @@ const Video = (props) => {
   };
 
   useEffect(() => {
-    props.socket.addEventListener('message', (event) => {
+    props.socket.addEventListener("message", (event) => {
       let data = JSON.parse(event.data);
-      if (data.event === 'sync') updateVideo(data);
-      if (data.event === 'join') join(data);
-      if (data.event === 'users' && props.leader) notify();
+      if (data.event === "sync") updateVideo(data);
+      if (data.event === "join") join(data);
+      if (data.event === "users" && props.leader) notify();
     });
     if (videoID !== null) {
       if (!window.YT) {
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
 
         window.onYouTubeIframeAPIReady = loadVideo;
 
-        const firstScriptTag = document.getElementsByTagName('script')[0];
+        const firstScriptTag = document.getElementsByTagName("script")[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       } else loadVideo();
     }
@@ -58,12 +58,12 @@ const Video = (props) => {
   const updateVideo = (data) => {
     let videoStatus = player.getPlayerState();
     if (
-      data.action === 'currenttime' &&
+      data.action === "currenttime" &&
       (videoStatus === 2 || videoStatus === -1)
     ) {
       playVideo();
       seekTo(data.currentTime);
-    } else if (data.action === 'pause' && videoStatus !== 2) pauseVideo();
+    } else if (data.action === "pause" && videoStatus !== 2) pauseVideo();
   };
 
   const onPlayerReady = (event) => event.target.playVideo();
@@ -77,15 +77,15 @@ const Video = (props) => {
   const syncPause = () => {
     props.socket.send(
       JSON.stringify({
-        event: 'sync',
-        action: 'pause',
+        event: "sync",
+        action: "pause",
       })
     );
   };
   const currentStatus = () =>
     JSON.stringify({
-      event: 'sync',
-      action: 'currenttime',
+      event: "sync",
+      action: "currenttime",
       videoID: videoID,
       currentTime: player.getCurrentTime(),
     });
@@ -97,13 +97,13 @@ const Video = (props) => {
 
   return (
     <>
-      <div className='videoWrap'>
-        <div className='video'>
-          <div id='player'>
+      <div className="videoWrap">
+        <div className="video">
+          <div id="player">
             <h3>No video found</h3>
           </div>
         </div>
-        {props.leader && <Views socket={props.socket} />}
+        {/* {props.leader && <Views socket={props.socket} />} */}
       </div>
     </>
   );

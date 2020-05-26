@@ -1,39 +1,19 @@
-import React, { useState } from 'react';
-import { useMediaQuery } from 'react-responsive';
-import { uuid } from 'uuidv4';
-import { useHistory } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import Welcome from '../welcome/welcome';
-
-import './createSession.scss';
-import { toast } from 'react-toastify';
+import React from "react";
+import { useHistory, useParams } from "react-router-dom";
 
 const CreateSession = (props) => {
-  const isTabletOrMobileDevice = useMediaQuery({
-    query: '(max-device-width: 1224px)',
-  });
   const history = useHistory();
-  const [url, setUrl] = useState('');
-  const notify = () =>
-    toast(
-      <div>
-        <FontAwesomeIcon icon={faExclamationTriangle} />
-        &nbsp; Invalid Link!
-      </div>
-    );
 
-  const sessionID = uuid().slice(0, 6);
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    var videoID = youtubeParser(url);
+  const { sessionID, videoUrl } = useParams();
+
+  const handleSubmit = () => {
+    const decodedVideoUrl = decodeURIComponent(videoUrl);
+    var videoID = youtubeParser(decodedVideoUrl);
     if (!videoID) {
-      notify();
       return;
     }
     props.session(videoID, sessionID, true);
-    history.push('/watch/leader');
+    history.push("/watch/leader");
   };
 
   const youtubeParser = (url) => {
@@ -42,31 +22,7 @@ const CreateSession = (props) => {
     return match && match[7].length === 11 ? match[7] : false;
   };
 
-  return (
-    <>
-      <Welcome mobile={isTabletOrMobileDevice} />
-      {isTabletOrMobileDevice ? (
-        <div className='mobileview'>
-          <p>Mobile users are only able to join on shared links</p>
-        </div>
-      ) : (
-        <div className='input-container'>
-          <form className='input-form' onSubmit={handleSubmit}>
-            <input
-              placeholder='Paste a YouTube link '
-              className='input-field'
-              type='text'
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
-            <button className='input-button' type='Submit'>
-              <FontAwesomeIcon icon={faPlay} />
-            </button>
-          </form>
-        </div>
-      )}
-    </>
-  );
+  return <div>{handleSubmit()}</div>;
 };
 
 export default CreateSession;

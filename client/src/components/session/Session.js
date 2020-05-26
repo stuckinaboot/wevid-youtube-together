@@ -30,14 +30,12 @@ const Session = (props) => {
     history.push("/");
   }
   return (
-    <div>
-      <Video
-        videoID={props.videoID}
-        leader={props.leader}
-        sessionID={sessID}
-        socket={socket}
-      />
-    </div>
+    <Video
+      videoID={props.videoID}
+      leader={props.leader}
+      sessionID={sessID}
+      socket={socket}
+    />
   );
 };
 

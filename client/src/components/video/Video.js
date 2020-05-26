@@ -83,15 +83,11 @@ const Video = (props) => {
   };
 
   return (
-    <>
-      <div className="videoWrap">
-        <div className="video">
-          <div id="player">
-            <h3>Loading...</h3>
-          </div>
-        </div>
+    <div className="video">
+      <div id="player">
+        <h3>Loading...</h3>
       </div>
-    </>
+    </div>
   );
 };
 

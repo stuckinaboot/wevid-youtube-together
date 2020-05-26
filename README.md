@@ -2,6 +2,8 @@
 
 > Synchronized YouTube player that let friends watch videos together regardless of geograpic location
 
+> Host the server and embed the youtube sync session in an iframe, allowing you to use this out of the box on any website for any use case
+
 ### Technologies
 
 - React.js
@@ -9,11 +11,6 @@
 - Node.js
 - Websockets
 - Express
-
-### TODO
-
-- [ ] Auto sync with leader on join
-- [ ] Update video id without breaking the session
 
 ### Setup
 
@@ -34,14 +31,30 @@ Example of creating a new session with session id `abc123` and youtube url `http
 
 Then, to join somebody else's existing youtube sync session, visit `localhost:8088/watch/abc123` in a new browser.
 
+### Contributing
+
+#### Submitting Issues
+
+If you notice any bugs, create a GitHub issue with the title being a very short summary of the problem, e.g. `Sync not working on start`, and the description being the _exact_ steps to reproduce the issue. If we do not have the _exact_ steps, we can't figure out what's wrong and can't fix it.
+
+If you notice any room for improvement, create a GitHub issue with the title being a very short summary of the improvement, e.g. `Improve session scalability`, and the description being the improvement you would like to see made. Feel free to add hints on the approach you woul take.
+
+#### Contributing
+
+Thank you for deciding to contribute! Pick a GitHub issue that you would like to address (or add your own), and then assign yourself to that issue. Currently, we don't have tests in place so please be sure to test various scenarios locally before deciding your changes are ready to submit. When you like to submit your changes for review, create a pull request and I will review/test it myself as soon as possible.
+
+**The main two files that are related to youtube sync and the scalability of the end-to-end process are `client/Video.js` and `server/server.js`**.
+
+Please contribute! This project needs scalability and sync improvements to allow its full potential to be reached!
+
 ### Inspiration
 
 Project inspired by [@YasserYka](https://github.com/YasserYka/YT-API).
 
-### Contact
-
-Created by [@filahf](https://www.filipahfelt.se/) - feel free to contact me!
-
 ### Credit
 
 The overwhelming majority of this was built by [@filahf](https://www.filipahfelt.se/), and can be seen on his youtube sync website https://wevid.online/. I (@stuckinaboot) just simplified the code to make using this within an iframe trivial.
+
+### Contributors
+
+[@filahf](https://github.com/filahf) [@stuckinaboot](https://github.com/stuckinaboot)

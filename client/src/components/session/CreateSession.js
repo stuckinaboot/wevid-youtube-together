@@ -8,8 +8,7 @@ const CreateSession = (props) => {
 
   const handleSubmit = () => {
     const decodedVideoUrl = decodeURIComponent(videoUrl);
-    console.log(sessionID, decodedVideoUrl);
-    var videoID = youtubeParser(decodedVideoUrl); //url);
+    var videoID = youtubeParser(decodedVideoUrl);
     if (!videoID) {
       return;
     }

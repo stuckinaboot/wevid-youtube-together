@@ -2,10 +2,13 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Video from "../video/Video";
+import getConfig from "../../configs/getConfig";
+
+const config = getConfig();
 
 const Session = (props) => {
   const history = useHistory();
-  const url = "ws://localhost:5000/";
+  const url = `ws://${config.sockets.host}:${config.sockets.port}/`;
   const socket = new WebSocket(url);
   let sessID = props.sessionID;
 
